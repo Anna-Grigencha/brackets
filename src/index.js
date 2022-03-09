@@ -15,18 +15,24 @@ module.exports = function check(str, bracketsConfig) {
 
   //function inBracketsOk(str) {
   let stack = [];
-
   for (let i = 0; i < str.length; i++) {
     let currentSymbol = str[i];
     if (openBrackets.includes(currentSymbol)) {
       //проверяем содержит ли множество открывающихся скобок текущий символ (открываее или закрывает)
-      stack.push(currentSymbol);
+      if (bracketsPair[currentSymbol] === currentSymbol) {
+        if (stack.length !== 0 && stack[stack.length - 1] === currentSymbol) {
+          stack.pop();
+        } else {
+          stack.push(currentSymbol);
+        }
+      } else {
+        stack.push(currentSymbol);
+      }
     } else {
       if (stack.length === 0) {
         return false;
       }
-      let topElement = stack[stack.length - 1];
-      if (bracketsPair[currentSymbol] === topElement) {
+      if (bracketsPair[currentSymbol] === stack[stack.length - 1]) {
         stack.pop();
       } else {
         return false;
@@ -35,5 +41,3 @@ module.exports = function check(str, bracketsConfig) {
   }
   return stack.length === 0;
 };
-
-//}
